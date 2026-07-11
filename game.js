@@ -12,27 +12,146 @@
 const AD_BANNERS = [
 ];
 
-// ==================== 定数 ====================
-const REAL_WORD = "カメルーン";
+// ==================== 多言語対応 ====================
+// 英語・フランス語はカメルーンの公用語。偽物プールは翻訳ではなく、
+// 各言語で「ネイティブに効く文字トラップ」を用意している。
+const I18N = {
+  ja: {
+    titleHTML: "めっちゃ<br>カメルーン",
+    descHTML: "カメルーンっぽいものの中から<br>本物の <strong>カメルーン</strong> を探せ！",
+    start: "スタート",
+    found: "みつけた",
+    prompts: {
+      word: "本物の「カメルーン」をタップ！",
+      flag: "本物のカメルーン国旗をタップ！",
+      shape: "本物のカメルーンの形をタップ！",
+    },
+    real: "カメルーン",
+    // すべて5文字でそろえて長さで見分けられないように
+    fakesEasy: [
+      "カメレオン", "メカルーン", "ルーンカメ", "カメループ",
+      "カルメーン", "カメルーナ", "カメルーノ", "カメンルー",
+    ],
+    fakesMid: [
+      "カメルンー", "カメールン", "カメウーン", "カメルーヌ",
+      "カヌルーン", "ガメルーン", "カメルーム", "カメリーン",
+    ],
+    // 文字トラップ（力=漢字のちから、一=漢数字のいち、ソ/ン）
+    fakesHard: ["カメルーソ", "力メルーン", "カメル一ン"],
+    praises: [
+      "めっちゃカメルーン！", "完全にカメルーン", "それだ！",
+      "ヤウンデ！", "ドゥアラ！", "アフリカの雄！",
+    ],
+    ranks: [
+      [0, "カメルーン、どこ…"], [1, "カメルーン見習い"], [4, "カメルーン初段"],
+      [8, "カメルーン通"], [13, "カメルーンマスター"], [18, "カメルーン大使"],
+      [25, "めっちゃカメルーン"],
+    ],
+    resultLabel: "みつけたカメルーン",
+    unit: " 個",
+    rankLabel: "称号：",
+    best: (n) => `ベスト記録：${n}個`,
+    shareBtn: "スコアをシェア",
+    retry: "もう一回",
+    adLabel: "広告",
+    share: (s, r) => `「めっちゃカメルーン」で本物のカメルーンを${s}個発見！\n称号：${r}\n#めっちゃカメルーン`,
+    share0: (r) => `「めっちゃカメルーン」でカメルーンを1個も見つけられませんでした…\n称号：${r}\n#めっちゃカメルーン`,
+  },
+  en: {
+    titleHTML: "MECCHA<br>CAMEROON",
+    descHTML: "Spot the real <strong>Cameroon</strong><br>hidden among the fakes!",
+    start: "START",
+    found: "Found",
+    prompts: {
+      word: 'Tap the real "Cameroon"!',
+      flag: "Tap the real flag of Cameroon!",
+      shape: "Tap the real shape of Cameroon!",
+    },
+    real: "Cameroon",
+    fakesEasy: [
+      "Chameleon", "Macaroon", "Camaroon", "Comeroon",
+      "Cameloon", "Kameroon", "Cameroot", "Camerlon",
+    ],
+    // "Cameroun" は仏語綴り（英語圏には偽物に見える）
+    fakesMid: [
+      "Cameroun", "Camerron", "Cameroan", "Camenoon",
+      "Cameroom", "Camoroon", "Camerool", "Cameraon",
+    ],
+    // rn ≈ m のトラップ、Ç・ñ のダイアクリティカルマーク
+    fakesHard: ["Carneroon", "Çameroon", "Camerooñ"],
+    praises: [
+      "TOTALLY CAMEROON!", "So Cameroon!", "That's it!",
+      "Yaoundé!", "Douala!", "Indomitable!",
+    ],
+    ranks: [
+      [0, "Where's Cameroon..."], [1, "Cameroon Rookie"], [4, "Cameroon Fan"],
+      [8, "Cameroon Expert"], [13, "Cameroon Master"], [18, "Cameroon Ambassador"],
+      [25, "TOTALLY CAMEROON"],
+    ],
+    resultLabel: "Cameroons found",
+    unit: "",
+    rankLabel: "Rank: ",
+    best: (n) => `Best: ${n}`,
+    shareBtn: "Share score",
+    retry: "PLAY AGAIN",
+    adLabel: "Ad",
+    share: (s, r) => `I found ${s} real Cameroons in "Meccha Cameroon"!\nRank: ${r}\n#MecchaCameroon`,
+    share0: (r) => `I couldn't find a single Cameroon in "Meccha Cameroon"...\nRank: ${r}\n#MecchaCameroon`,
+  },
+  fr: {
+    titleHTML: "MECCHA<br>CAMEROUN",
+    descHTML: "Trouvez le vrai <strong>Cameroun</strong><br>parmi les imposteurs !",
+    start: "JOUER",
+    found: "Trouvés",
+    prompts: {
+      word: "Touchez le vrai « Cameroun » !",
+      flag: "Touchez le vrai drapeau du Cameroun !",
+      shape: "Touchez la vraie forme du Cameroun !",
+    },
+    real: "Cameroun",
+    fakesEasy: [
+      "Caméléon", "Macaroun", "Camaroun", "Comeroun",
+      "Cameloun", "Kameroun", "Camerlan", "Cameroux",
+    ],
+    // "Cameroon" は英語綴り（仏語圏には偽物に見える）
+    fakesMid: [
+      "Cameroon", "Camerron", "Cameroan", "Camenoun",
+      "Cameroum", "Camoroun", "Cameroul", "Cameraun",
+    ],
+    // rn ≈ m のトラップ、Ç・é のダイアクリティカルマーク
+    fakesHard: ["Carneroun", "Çameroun", "Caméroun"],
+    praises: [
+      "TELLEMENT CAMEROUN !", "C'est ça !", "Yaoundé !",
+      "Douala !", "Les Lions Indomptables !", "Magnifique !",
+    ],
+    ranks: [
+      [0, "Cameroun, où es-tu…"], [1, "Apprenti Cameroun"], [4, "Amateur du Cameroun"],
+      [8, "Connaisseur du Cameroun"], [13, "Maître du Cameroun"], [18, "Ambassadeur du Cameroun"],
+      [25, "TELLEMENT CAMEROUN"],
+    ],
+    resultLabel: "Cameroun trouvés",
+    unit: "",
+    rankLabel: "Rang : ",
+    best: (n) => `Record : ${n}`,
+    shareBtn: "Partager le score",
+    retry: "REJOUER",
+    adLabel: "Publicité",
+    share: (s, r) => `J'ai trouvé ${s} vrais Cameroun dans « Meccha Cameroun » !\nRang : ${r}\n#MecchaCameroon`,
+    share0: (r) => `Pas un seul Cameroun trouvé dans « Meccha Cameroun »…\nRang : ${r}\n#MecchaCameroon`,
+  },
+};
 
-// 偽物プール（すべて5文字でそろえて長さで見分けられないように）
-const FAKES_EASY = [
-  "カメレオン", "メカルーン", "ルーンカメ", "カメループ",
-  "カルメーン", "カメルーナ", "カメルーノ", "カメンルー",
-];
-const FAKES_MID = [
-  "カメルンー", "カメールン", "カメウーン", "カメルーヌ",
-  "カヌルーン", "ガメルーン", "カメルーム", "カメリーン",
-];
-// 文字トラップ（力=漢字のちから、一=漢数字のいち、ソ/ン）
-const FAKES_HARD = [
-  "カメルーソ", "力メルーン", "カメル一ン",
-];
-
-const PRAISES = [
-  "めっちゃカメルーン！", "完全にカメルーン", "それだ！",
-  "ヤウンデ！", "ドゥアラ！", "アフリカの雄！",
-];
+// 言語決定: URLパラメータ > 保存済み設定 > ブラウザ言語 > 英語
+const LANG_KEY = "mecchaCameroonLang";
+let lang = (() => {
+  const param = new URLSearchParams(location.search).get("lang");
+  if (I18N[param]) return param;
+  const saved = localStorage.getItem(LANG_KEY);
+  if (I18N[saved]) return saved;
+  const nav = (navigator.language || "").slice(0, 2);
+  return I18N[nav] ? nav : "en";
+})();
+const L = () => I18N[lang];
 
 // 国旗定義: stripes = 縦3色, star = { band: 星のある帯(0-2), color }
 const REAL_FLAG = {
@@ -84,27 +203,11 @@ const FAKE_SHAPES = [
   { path: SHAPE_TCD, transform: "rotate(180 50 50)" },
 ];
 
-const PROMPTS = {
-  word: "本物の「カメルーン」をタップ！",
-  flag: "本物のカメルーン国旗をタップ！",
-  shape: "本物のカメルーンの形をタップ！",
-};
-
 const START_TIME = 20;      // 秒
 const TIME_BONUS = 1.2;     // 正解で回復
 const TIME_PENALTY = 2.5;   // 誤タップで減少
 const MAX_TIME = 25;
 const BEST_KEY = "mecchaCameroonBest";
-
-const RANKS = [
-  [0, "カメルーン、どこ…"],
-  [1, "カメルーン見習い"],
-  [4, "カメルーン初段"],
-  [8, "カメルーン通"],
-  [13, "カメルーンマスター"],
-  [18, "カメルーン大使"],
-  [25, "めっちゃカメルーン"],
-];
 
 // ==================== 状態 ====================
 let score = 0;
@@ -189,10 +292,11 @@ function roundType(r) {
 }
 
 function fakeWordPool(r) {
-  if (r <= 2) return FAKES_EASY;
-  if (r <= 5) return [...FAKES_EASY, ...FAKES_MID];
-  if (r <= 8) return [...FAKES_MID, ...FAKES_HARD];
-  return [...FAKES_MID, ...FAKES_HARD, ...FAKES_HARD]; // トラップ率アップ
+  const { fakesEasy, fakesMid, fakesHard } = L();
+  if (r <= 2) return fakesEasy;
+  if (r <= 5) return [...fakesEasy, ...fakesMid];
+  if (r <= 8) return [...fakesMid, ...fakesHard];
+  return [...fakesMid, ...fakesHard, ...fakesHard]; // トラップ率アップ
 }
 
 function flagHTML(flag) {
@@ -224,7 +328,7 @@ function buildRound() {
   const type = roundType(round);
   const realIndex = Math.floor(Math.random() * count);
 
-  $("prompt").textContent = PROMPTS[type];
+  $("prompt").textContent = L().prompts[type];
   gridEl.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
   gridEl.style.setProperty("--tile-font", `${Math.max(11, 24 - cols * 2.6)}px`);
   gridEl.innerHTML = "";
@@ -242,7 +346,7 @@ function buildRound() {
       tile.classList.add("shape-tile");
       tile.innerHTML = shapeHTML(isReal ? REAL_SHAPE : pick(FAKE_SHAPES));
     } else {
-      tile.textContent = isReal ? REAL_WORD : pick(pool);
+      tile.textContent = isReal ? L().real : pick(pool);
     }
     tile.addEventListener("pointerdown", () => onTap(tile, isReal), { passive: true });
     gridEl.appendChild(tile);
@@ -275,7 +379,7 @@ function onTap(tile, isReal) {
 }
 
 function showPraise() {
-  praiseEl.textContent = pick(PRAISES);
+  praiseEl.textContent = pick(L().praises);
   praiseEl.classList.remove("show");
   void praiseEl.offsetWidth;
   praiseEl.classList.add("show");
@@ -314,8 +418,9 @@ function startGame() {
 }
 
 function getRank(s) {
-  let rank = RANKS[0][1];
-  for (const [min, name] of RANKS) {
+  const ranks = L().ranks;
+  let rank = ranks[0][1];
+  for (const [min, name] of ranks) {
     if (s >= min) rank = name;
   }
   return rank;
@@ -346,13 +451,10 @@ function endGame() {
 
   const best = Math.max(score, Number(localStorage.getItem(BEST_KEY) || 0));
   localStorage.setItem(BEST_KEY, best);
-  $("result-best").textContent = `ベスト記録：${best}個`;
+  $("result-best").textContent = L().best(best);
 
-  const shareText =
-    score === 0
-      ? `「めっちゃカメルーン」でカメルーンを1個も見つけられませんでした…\n称号：${rank}\n#めっちゃカメルーン`
-      : `「めっちゃカメルーン」で本物のカメルーンを${score}個発見！\n称号：${rank}\n#めっちゃカメルーン`;
-  const url = location.origin + location.pathname;
+  const shareText = score === 0 ? L().share0(rank) : L().share(score, rank);
+  const url = location.origin + location.pathname + (lang === "ja" ? "" : `?lang=${lang}`);
   $("btn-share").href =
     `https://x.com/intent/post?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}`;
 
@@ -360,11 +462,33 @@ function endGame() {
   showScreen("result");
 }
 
+// ==================== 言語適用 ====================
+function applyLang(next) {
+  lang = next;
+  localStorage.setItem(LANG_KEY, lang);
+  document.documentElement.lang = lang;
+  const t = L();
+  $("game-title").innerHTML = t.titleHTML;
+  $("title-desc").innerHTML = t.descHTML;
+  $("btn-start").textContent = t.start;
+  $("hud-found").textContent = t.found;
+  $("result-label").textContent = t.resultLabel;
+  $("result-unit").textContent = t.unit;
+  $("rank-label").textContent = t.rankLabel;
+  $("btn-share").textContent = t.shareBtn;
+  $("btn-retry").textContent = t.retry;
+  $("ad-label").textContent = t.adLabel;
+  const best = Number(localStorage.getItem(BEST_KEY) || 0);
+  $("title-best").textContent = best > 0 ? t.best(best) : "";
+  document.querySelectorAll(".lang-switch button").forEach((b) => {
+    b.classList.toggle("active", b.dataset.lang === lang);
+  });
+}
+
 // ==================== 初期化 ====================
 $("btn-start").addEventListener("click", startGame);
 $("btn-retry").addEventListener("click", startGame);
-
-const savedBest = Number(localStorage.getItem(BEST_KEY) || 0);
-if (savedBest > 0) {
-  $("title-best").textContent = `ベスト記録：${savedBest}個`;
-}
+document.querySelectorAll(".lang-switch button").forEach((b) => {
+  b.addEventListener("click", () => applyLang(b.dataset.lang));
+});
+applyLang(lang);

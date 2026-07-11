@@ -20,17 +20,22 @@
         <span class="band" style="background:#ce1126"><i class="star">★</i></span>
         <span class="band" style="background:#fcd116"></span>
       </div>
-      <h1 class="game-title">めっちゃ<br>カメルーン</h1>
-      <p class="title-desc">カメルーンっぽいものの中から<br>本物の <strong>カメルーン</strong> を探せ！</p>
+      <h1 id="game-title" class="game-title">めっちゃ<br>カメルーン</h1>
+      <p id="title-desc" class="title-desc">カメルーンっぽいものの中から<br>本物の <strong>カメルーン</strong> を探せ！</p>
       <button id="btn-start" class="btn btn-primary">スタート</button>
       <p id="title-best" class="best-label"></p>
+      <div class="lang-switch">
+        <button type="button" data-lang="ja">日本語</button>
+        <button type="button" data-lang="en">English</button>
+        <button type="button" data-lang="fr">Français</button>
+      </div>
     </div>
   </div>
 
   <!-- ゲーム画面 -->
   <div id="screen-game" class="screen">
     <div class="hud">
-      <div class="hud-score">みつけた <span id="score">0</span></div>
+      <div class="hud-score"><span id="hud-found">みつけた</span> <span id="score">0</span></div>
       <div class="timer-bar"><div id="timer-fill"></div></div>
     </div>
     <p id="prompt" class="game-prompt">本物の「カメルーン」をタップ！</p>
@@ -41,14 +46,14 @@
   <!-- リザルト画面 -->
   <div id="screen-result" class="screen">
     <div class="result-wrap">
-      <p class="result-label">みつけたカメルーン</p>
-      <p class="result-score"><span id="result-score">0</span><small> 個</small></p>
-      <p class="result-title">称号：<strong id="result-rank"></strong></p>
+      <p id="result-label" class="result-label">みつけたカメルーン</p>
+      <p class="result-score"><span id="result-score">0</span><small id="result-unit"> 個</small></p>
+      <p class="result-title"><span id="rank-label">称号：</span><strong id="result-rank"></strong></p>
       <p id="result-best" class="best-label"></p>
       <a id="btn-share" class="btn btn-share" target="_blank" rel="noopener">スコアをシェア</a>
       <button id="btn-retry" class="btn btn-primary">もう一回</button>
       <div id="ad-slot" class="ad-slot" hidden>
-        <p class="ad-label">広告</p>
+        <p id="ad-label" class="ad-label">広告</p>
         <div id="ad-content" class="ad-content"></div>
       </div>
     </div>

@@ -141,6 +141,32 @@ body {
   margin-top: 6px;
 }
 
+/* 言語切替 */
+.lang-switch {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 22px;
+}
+
+.lang-switch button {
+  background: none;
+  border: 1px solid #3a4230;
+  color: var(--text);
+  opacity: 0.65;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.lang-switch button.active {
+  border-color: var(--yellow);
+  color: var(--yellow);
+  opacity: 1;
+}
+
 /* ---------- ゲーム画面 ---------- */
 #screen-game {
   justify-content: flex-start;
