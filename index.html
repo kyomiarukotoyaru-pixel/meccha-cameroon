@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>めっちゃカメルーン</title>
+  <meta name="description" content="カメルーンっぽいものの中から本物のカメルーンを探せ！制限時間内に何個見つけられる？">
+  <meta property="og:title" content="めっちゃカメルーン">
+  <meta property="og:description" content="カメルーンっぽいものの中から本物のカメルーンを探せ！">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- タイトル画面 -->
+  <div id="screen-title" class="screen active">
+    <div class="title-wrap">
+      <div class="title-flag">
+        <span class="band" style="background:#007a5e"></span>
+        <span class="band" style="background:#ce1126"><i class="star">★</i></span>
+        <span class="band" style="background:#fcd116"></span>
+      </div>
+      <h1 class="game-title">めっちゃ<br>カメルーン</h1>
+      <p class="title-desc">カメルーンっぽいものの中から<br>本物の <strong>カメルーン</strong> を探せ！</p>
+      <button id="btn-start" class="btn btn-primary">スタート</button>
+      <p id="title-best" class="best-label"></p>
+    </div>
+  </div>
+
+  <!-- ゲーム画面 -->
+  <div id="screen-game" class="screen">
+    <div class="hud">
+      <div class="hud-score">みつけた <span id="score">0</span></div>
+      <div class="timer-bar"><div id="timer-fill"></div></div>
+    </div>
+    <p id="prompt" class="game-prompt">本物の「カメルーン」をタップ！</p>
+    <div id="grid" class="grid"></div>
+    <div id="praise" class="praise"></div>
+  </div>
+
+  <!-- リザルト画面 -->
+  <div id="screen-result" class="screen">
+    <div class="result-wrap">
+      <p class="result-label">みつけたカメルーン</p>
+      <p class="result-score"><span id="result-score">0</span><small> 個</small></p>
+      <p class="result-title">称号：<strong id="result-rank"></strong></p>
+      <p id="result-best" class="best-label"></p>
+      <a id="btn-share" class="btn btn-share" target="_blank" rel="noopener">スコアをシェア</a>
+      <button id="btn-retry" class="btn btn-primary">もう一回</button>
+      <div id="ad-slot" class="ad-slot" hidden>
+        <p class="ad-label">広告</p>
+        <div id="ad-content" class="ad-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

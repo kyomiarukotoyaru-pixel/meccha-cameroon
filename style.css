@@ -1,0 +1,387 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --green: #007a5e;
+  --red: #ce1126;
+  --yellow: #fcd116;
+  --bg: #12140f;
+  --panel: #1e2318;
+  --text: #f5f2e8;
+}
+
+html, body {
+  height: 100%;
+  overscroll-behavior: none;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.screen {
+  display: none;
+  min-height: 100dvh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.screen.active {
+  display: flex;
+}
+
+/* ---------- タイトル画面 ---------- */
+.title-wrap {
+  text-align: center;
+  max-width: 420px;
+  width: 100%;
+}
+
+.title-flag {
+  display: flex;
+  width: 96px;
+  height: 64px;
+  margin: 0 auto 20px;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.title-flag .band {
+  flex: 1;
+  position: relative;
+}
+
+.title-flag .star {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: normal;
+  color: var(--yellow);
+  font-size: 18px;
+}
+
+.game-title {
+  font-size: clamp(40px, 12vw, 64px);
+  line-height: 1.15;
+  font-weight: 900;
+  background: linear-gradient(180deg, var(--green) 20%, var(--red) 50%, var(--yellow) 85%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.6));
+  margin-bottom: 18px;
+}
+
+.title-desc {
+  font-size: 16px;
+  line-height: 1.8;
+  opacity: 0.9;
+  margin-bottom: 28px;
+}
+
+.title-desc strong {
+  color: var(--yellow);
+}
+
+/* ---------- ボタン ---------- */
+.btn {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto 14px;
+  padding: 16px;
+  font-size: 20px;
+  font-weight: 800;
+  font-family: inherit;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  transition: transform 0.08s;
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, #00966f, var(--green));
+  box-shadow: 0 4px 0 #00543f;
+}
+
+.btn-share {
+  background: #000;
+  border: 2px solid #333;
+  box-shadow: 0 4px 0 #000;
+}
+
+.btn-share::before {
+  content: "𝕏 ";
+}
+
+.best-label {
+  font-size: 14px;
+  opacity: 0.7;
+  margin-top: 6px;
+}
+
+/* ---------- ゲーム画面 ---------- */
+#screen-game {
+  justify-content: flex-start;
+  padding-top: 14px;
+}
+
+.hud {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.hud-score {
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.hud-score span {
+  font-size: 22px;
+  color: var(--yellow);
+}
+
+.timer-bar {
+  flex: 1;
+  height: 14px;
+  background: #000;
+  border-radius: 7px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+
+#timer-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, var(--green), var(--yellow));
+  border-radius: 7px;
+  transition: background 0.3s;
+}
+
+#timer-fill.low {
+  background: var(--red);
+}
+
+.game-prompt {
+  font-size: 14px;
+  opacity: 0.75;
+  margin-bottom: 12px;
+}
+
+.grid {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  max-width: 520px;
+}
+
+.grid.shake {
+  animation: shake 0.25s;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+.tile {
+  background: var(--panel);
+  border: 2px solid #3a4230;
+  border-radius: 10px;
+  color: var(--text);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: var(--tile-font, 18px);
+  padding: 0;
+  aspect-ratio: 1.6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.06s;
+}
+
+.tile:active {
+  transform: scale(0.94);
+}
+
+.tile.wrong {
+  background: #3d1114;
+  border-color: var(--red);
+  color: #a06266;
+  pointer-events: none;
+  animation: shake 0.25s;
+}
+
+.tile.correct {
+  background: #0d3d2f;
+  border-color: var(--yellow);
+  color: var(--yellow);
+  animation: pop 0.18s;
+}
+
+@keyframes pop {
+  50% { transform: scale(1.12); }
+}
+
+/* 国旗タイル */
+.tile.flag-tile {
+  padding: 8px;
+}
+
+.flag {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.flag .band {
+  flex: 1;
+  position: relative;
+}
+
+.flag .star {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: normal;
+  font-size: clamp(10px, 3.5vw, 16px);
+}
+
+/* 国土シルエットタイル */
+.tile.shape-tile {
+  padding: 6px;
+}
+
+.tile.shape-tile svg {
+  width: 100%;
+  height: 100%;
+}
+
+.tile.shape-tile.correct svg path {
+  fill: var(--yellow);
+}
+
+.tile.shape-tile.wrong svg path {
+  fill: #6b3438;
+}
+
+/* 正解ポップ */
+.praise {
+  position: fixed;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(24px, 7vw, 40px);
+  font-weight: 900;
+  color: var(--yellow);
+  text-shadow: 0 0 12px rgba(252, 209, 22, 0.5), 0 3px 0 rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.praise.show {
+  animation: praise 0.7s ease-out;
+}
+
+@keyframes praise {
+  0% { opacity: 0; transform: translate(-50%, -30%) scale(0.6); }
+  20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+  80% { opacity: 1; transform: translate(-50%, -60%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -75%) scale(1); }
+}
+
+/* ---------- リザルト画面 ---------- */
+.result-wrap {
+  text-align: center;
+  max-width: 420px;
+  width: 100%;
+}
+
+.result-label {
+  font-size: 16px;
+  opacity: 0.8;
+}
+
+.result-score {
+  font-size: 88px;
+  font-weight: 900;
+  color: var(--yellow);
+  line-height: 1.1;
+  text-shadow: 0 4px 0 rgba(0, 0, 0, 0.6);
+}
+
+.result-score small {
+  font-size: 24px;
+}
+
+.result-title {
+  font-size: 18px;
+  margin: 10px 0 4px;
+}
+
+.result-title strong {
+  color: var(--green);
+  font-size: 24px;
+  color: #2fbf94;
+}
+
+#result-best {
+  margin-bottom: 26px;
+}
+
+/* 広告枠（リザルト画面下部のみ） */
+.ad-slot {
+  margin-top: 28px;
+}
+
+.ad-label {
+  font-size: 11px;
+  opacity: 0.45;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.ad-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50px;
+  max-width: 336px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 8px;
+}
