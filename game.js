@@ -437,6 +437,120 @@ function getRank(s) {
   return rank;
 }
 
+// ==================== シェア用スコアカード画像 ====================
+const CARD_FONT = '"Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif';
+
+function drawStar(g, cx, cy, r, color) {
+  g.fillStyle = color;
+  g.beginPath();
+  for (let i = 0; i < 5; i++) {
+    const a = -Math.PI / 2 + (i * 2 * Math.PI) / 5;
+    const b = a + Math.PI / 5;
+    g.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
+    g.lineTo(cx + r * 0.42 * Math.cos(b), cy + r * 0.42 * Math.sin(b));
+  }
+  g.closePath();
+  g.fill();
+}
+
+// スコアカード(1200x630)をCanvasに描画して返す
+function drawShareCard(s, rank) {
+  const t = L();
+  const c = document.createElement("canvas");
+  c.width = 1200;
+  c.height = 630;
+  const g = c.getContext("2d");
+
+  // 背景
+  g.fillStyle = "#12140f";
+  g.fillRect(0, 0, 1200, 630);
+
+  // カメルーン国旗（上部中央）
+  const fw = 216, fh = 144, fx = (1200 - fw) / 2, fy = 52;
+  ["#007a5e", "#ce1126", "#fcd116"].forEach((col, i) => {
+    g.fillStyle = col;
+    g.fillRect(fx + (i * fw) / 3, fy, fw / 3, fh);
+  });
+  drawStar(g, 600, fy + fh / 2, 26, "#fcd116");
+
+  g.textAlign = "center";
+
+  // ラベル
+  g.fillStyle = "#b9b5a8";
+  g.font = "700 36px " + CARD_FONT;
+  g.fillText(t.resultLabel, 600, 268);
+
+  // スコア（単位付きで中央寄せ）
+  const unit = t.unit.trim();
+  g.font = "900 180px " + CARD_FONT;
+  const numW = g.measureText(String(s)).width;
+  let unitW = 0;
+  if (unit) {
+    g.font = "700 64px " + CARD_FONT;
+    unitW = g.measureText(unit).width + 14;
+  }
+  const x0 = 600 - (numW + unitW) / 2;
+  g.textAlign = "left";
+  g.fillStyle = "#fcd116";
+  g.font = "900 180px " + CARD_FONT;
+  g.fillText(String(s), x0, 438);
+  if (unit) {
+    g.fillStyle = "#f5f2e8";
+    g.font = "700 64px " + CARD_FONT;
+    g.fillText(unit, x0 + numW + 14, 438);
+  }
+
+  // 称号
+  g.textAlign = "center";
+  g.fillStyle = "#2fbf94";
+  g.font = "800 48px " + CARD_FONT;
+  g.fillText(t.rankLabel + rank, 600, 512);
+
+  // ゲームタイトル
+  const title = t.titleHTML.replace(/<br>/g, lang === "ja" ? "" : " ");
+  g.fillStyle = "#f5f2e8";
+  g.font = "900 42px " + CARD_FONT;
+  g.fillText(title, 600, 582);
+
+  // 下端の三色帯
+  ["#007a5e", "#ce1126", "#fcd116"].forEach((col, i) => {
+    g.fillStyle = col;
+    g.fillRect(i * 400, 612, 400, 18);
+  });
+
+  return c;
+}
+
+// Web Share APIで画像付きシェア（対応環境のみ。非対応はXインテントリンクのまま）
+let lastResult = null; // { score, rank }
+
+function canShareFiles() {
+  try {
+    return (
+      typeof File === "function" &&
+      navigator.canShare &&
+      navigator.canShare({ files: [new File([""], "s.png", { type: "image/png" })] })
+    );
+  } catch (e) {
+    return false;
+  }
+}
+
+async function shareWithImage() {
+  const { score: s, rank } = lastResult;
+  const canvas = drawShareCard(s, rank);
+  const blob = await new Promise((res) => canvas.toBlob(res, "image/png"));
+  const file = new File([blob], "meccha-cameroon.png", { type: "image/png" });
+  const text = s === 0 ? L().share0(rank) : L().share(s, rank);
+  const url = location.origin + location.pathname + (lang === "ja" ? "" : `?lang=${lang}`);
+  try {
+    await navigator.share({ files: [file], text: `${text}\n${url}` });
+  } catch (err) {
+    // キャンセルは無視。それ以外の失敗は従来のインテントへ
+    if (err && err.name !== "AbortError") window.open($("btn-share").href, "_blank");
+  }
+}
+
 // アフィリエイトバナーをリザルト画面の枠に表示（毎回ランダムにローテーション）。
 // タグに<script>が含まれる場合も動くよう、script要素は作り直して差し替える。
 function loadAd() {
@@ -457,6 +571,7 @@ function endGame() {
   soundEnd();
 
   const rank = getRank(score);
+  lastResult = { score, rank };
   $("result-score").textContent = score;
   $("result-rank").textContent = rank;
 
@@ -499,6 +614,13 @@ function applyLang(next) {
 // ==================== 初期化 ====================
 $("btn-start").addEventListener("click", startGame);
 $("btn-retry").addEventListener("click", startGame);
+// 対応環境ではスコアカード画像付きの共有シートを開く
+// （preventDefaultは同期で行う必要があるため、判定は事前チェックで）
+$("btn-share").addEventListener("click", (e) => {
+  if (!lastResult || !canShareFiles()) return; // 非対応: 通常のXリンクとして動作
+  e.preventDefault();
+  shareWithImage();
+});
 document.querySelectorAll(".lang-switch button").forEach((b) => {
   b.addEventListener("click", () => applyLang(b.dataset.lang));
 });
