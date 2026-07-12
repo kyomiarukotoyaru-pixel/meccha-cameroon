@@ -252,6 +252,10 @@ body {
   justify-content: center;
   cursor: pointer;
   transition: transform 0.06s;
+  /* 中身の文字幅でグリッドを押し広げない（横はみ出し防止） */
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .tile:active {

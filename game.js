@@ -335,8 +335,13 @@ function buildRound() {
   const realIndex = Math.floor(Math.random() * count);
 
   $("prompt").textContent = L().prompts[type];
-  gridEl.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-  gridEl.style.setProperty("--tile-font", `${Math.max(11, 24 - cols * 2.6)}px`);
+  // minmax(0,1fr): 列が中身の最小幅より縮めるようにし、画面幅を超えない
+  gridEl.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
+  // フォントはグリッドの実測幅から算出（最長9文字の英単語/全角5文字が収まるサイズ）
+  const gridW = gridEl.clientWidth || 328;
+  const tileW = (gridW - (cols - 1) * 8) / cols;
+  const font = Math.max(9, Math.min(24 - cols * 2.6, (tileW - 10) / 5.8));
+  gridEl.style.setProperty("--tile-font", `${font.toFixed(1)}px`);
   gridEl.innerHTML = "";
 
   const pool = fakeWordPool(round);
